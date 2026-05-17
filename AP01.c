@@ -118,6 +118,7 @@ int main() {
 
     //Saída de Dados
     printList(lista);
+    printf("\n%d", lista->NEP);
 
     No *atual = lista->head;
     while (atual != NULL) {
