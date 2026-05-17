@@ -32,29 +32,31 @@ No* CreateNode(int id){
     return novo;
 }
 
-List* InserirNoOrdenado(No *new, int size){
+void InserirNoOrdenado(List *lista, int id){
     //Cria a estrutura de lista duplamente encadeada
-    List *lista = malloc(size * sizeof(No));
-    lista->NEP = 0;
+    No *new = CreateNode(id);
 
     //Caso seja a primeira inserção da lista
     if(lista->head == NULL && lista->tail == NULL){
         lista->head = new;
         lista->tail = new;
+        return;
     }
 
     //Inserção no início
-    if(new->id <= lista->head->id){
+    if(id <= lista->head->id){
         new->prox = lista->head;
         lista->head->ant = new;
         lista->head = new;
+        return;
     }
 
     //Inserção no final
-    if(new->id >= lista->tail->id){
+    if(id >= lista->tail->id){
         lista->tail->prox = new;
         new->ant = lista->tail;
         lista->tail = new;
+        return;
     }
 
     //Inserção no meio pela técnica da distancia
@@ -65,7 +67,7 @@ List* InserirNoOrdenado(No *new, int size){
 
         No *aux = lista->head;
 
-        while(new->id >= aux->id){
+        while(new->id >= aux->id && aux != NULL){
             aux = aux->prox;
             (lista->NEP)++;
         }
@@ -87,15 +89,13 @@ List* InserirNoOrdenado(No *new, int size){
         aux->prox = new;
         new->ant = aux;
     }
-    
-    return lista;
 }
 
 void printList(List *lista){
 
     No *start = lista->head;
     while (start != NULL){
-        printf("%d", &start->id);
+        printf("%d ", start->id);
         start = start->prox;
     }
 }
@@ -103,19 +103,29 @@ void printList(List *lista){
 int main() {
 
     int exec, id, NEP;
-    No *head = NULL;
-    No *tail = NULL;
+    List *lista = malloc(sizeof(List));
+    lista->head = NULL;
+    lista->tail = NULL;
+    lista->NEP = 0;
 
     scanf("%d", &exec);
 
     //Entrada de Dados
     for(int i = 0; i < exec; i++){
         scanf("%d", &id);
-        InserirNoOrdenado(CreateNode(id), exec);
+        InserirNoOrdenado(lista, id);
     }
 
     //Saída de Dados
-    printList(InserirNoOrdenado(CreateNode(id), exec));
+    printList(lista);
+
+    No *atual = lista->head;
+    while (atual != NULL) {
+        No *proximo = atual->prox;
+        free(atual);
+        atual = proximo;
+    }
+    free(lista);
 
     return 0;
 }
