@@ -8,30 +8,51 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int PARTITION(int Array[], int p, int r){
+int Partition(int Array[], int p, int r){
+    //Mediada de 3
+    int med = (r + p) / 2;
+    int aux = 0;
+
+    if (Array[med] < Array[p]) {
+        aux = Array[med]; Array[med] = Array[p]; Array[p] = aux;
+    }
+    if (Array[r] < Array[p]) {
+        aux = Array[r]; Array[r] = Array[p]; Array[p] = aux;
+    }
+    if (Array[r] < Array[med]) {
+        aux = Array[r]; Array[r] = Array[med]; Array[med] = aux;
+    }
+
+    aux = Array[r];
+    Array[r] = Array[med];
+    Array[med] = aux;
+    
+    //Partition
     int x = Array[r];
-    int i = p - 1;
-    for (int j = p; j < r - 1; j++){
-        if(Array[j < x]){
-            i = i + 1;
-            //SWAP
-            int aux = Array[i];
+    int i = p - 1; 
+    int aux2 = 0;
+    for(int j = p; j < r; j++){
+        if(Array[j] <= x){
+            i++;
+            //Swap
+            aux2 = Array[i];
             Array[i] = Array[j];
-            Array[j] = aux;
+            Array[j] = aux2;
         }
     }
-    //SWAP
-    int aux2 = Array[i + 1];
+    aux2 = Array[i + 1];
     Array[i + 1] = Array[r];
     Array[r] = aux2;
 
-    return (i + 1);
+    return i + 1;
 }
 
-void QUICK_SORT(int Array[], int p, int r){
-    int q = PARTITION(Array, p, r);
-    QUICK_SORT(Array, p, q - 1);
-    QUICK_SORT(Array, q + 1, r);
+void QuickSort(int Array[], int p, int r){
+    if(p < r){
+        int q = Partition(Array, p, r);
+        QuickSort(Array, p, q - 1);
+        QuickSort(Array, q + 1, r);
+    }
 }
 
 int main() {
