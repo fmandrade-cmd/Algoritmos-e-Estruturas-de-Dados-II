@@ -34,9 +34,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Mantém a propriedade do Max Heap
+void MaxHeapfy(int A[], int size, int i){
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+    int max = i; // Assume que o pai é o maior
 
+    if(l < size && A[l] > A[max]){
+        max = l;
+    }
+    if(r < size && A[r] > A[max]){
+        max = r;
+    }
+    if(max != i){
+        int swap = A[i];
+        A[i] = A[max];
+        A[max] = swap;
+        
+        // Chamada recursiva para ajustar os nós abaixo
+        MaxHeapfy(A, size, max);
+    }
+}
+
+// Transforma o array em um Max Heap válido
+void BuildMaxHeap(int A[], int size){
+    // (size/2) - 1 encontra o último nó pai da árvore (evita olhar as folhas)
+    for(int k = (size / 2) - 1; k >= 0; k--){
+        MaxHeapfy(A, size, k);
+    }
+}
+
+// Algoritmo Heap Sort principal
+void HeapSort(int A[], int size){
+    // 1. Organiza o array como um Max Heap pela primeira vez
+    BuildMaxHeap(A, size);
+
+    // 2. Extrai os elementos do Heap de trás para frente
+    for (int i = size - 1; i > 0; i--) {
+        // O maior elemento sempre está na raiz (A[0]). 
+        // Jogamos ele para o final do array (na parte que já vai ficando ordenada).
+        int swap = A[0];
+        A[0] = A[i];
+        A[i] = swap;
+
+        // Diminuímos o tamanho considerado do Heap (passando 'i') 
+        // e reorganizamos a nova raiz que veio lá de trás.
+        MaxHeapfy(A, i, 0);
+    }
+}
 
 int main() {
+    int v[] = {7, -3, 15, 0, 9, 2, 8};
+    int tamanho = sizeof(v) / sizeof(v[0]);
+
+    for(int i = 0; i < tamanho; i++) printf("%d ", v[i]);
+    
+    HeapSort(v, tamanho);
+
+    for(int i = 0; i < tamanho; i++) printf("%d ", v[i]);
+    printf("\n");
 
     return 0;
 }
